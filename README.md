@@ -18,6 +18,7 @@ cd rails-api-server
 bundle install
 rake db:create
 rake db:migrate
+rake db:seed
 rails s
 ```
 ##socket.io setup
@@ -40,14 +41,14 @@ react-native run-ios
 
 ####SignUp user
 ```bash
-curl -X POST -H "Content-Type: application/json" http://localhost:3000/v1/users -d '{"user": {"email": "user1@example.com", "password": "123456"}}'
+curl -X POST -H "Content-Type: application/json" http://localhost:3000/v1/users -d '{"user": {"email": "user1@example.com", "password": "password"}}'
 
 >> {"email":"user1@example.com","user_id":1,"access_token":"xfB32Lgoi_7A7CEkcMYh"}
 ```
 
 ####SignIn user
 ```bash
-curl -X POST -H "Content-Type: application/json" http://localhost:3000/v1/login -d '{"email": "user1@example.com", "password": "123456"}'
+curl -X POST -H "Content-Type: application/json" http://localhost:3000/v1/login -d '{"email": "user1@example.com", "password": "password"}'
 
 >> {"email":"user1@example.com","user_id":1,"access_token":"xfB32Lgoi_7A7CEkcMYh"}
 ```
