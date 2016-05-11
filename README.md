@@ -18,7 +18,6 @@ cd rails-api-server
 bundle install
 rake db:create
 rake db:migrate
-rake db:seed
 rails s
 ```
 ##socket.io setup
