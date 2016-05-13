@@ -1,4 +1,4 @@
-import React, {Component, View, Text, TextInput, StyleSheet, TouchableOpacity, AsyncStorage} from 'react-native';
+import React, {Component, View, Text, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import API from './Api';
 
@@ -23,9 +23,9 @@ class Login extends Component {
     }
 
     try {
-      let response = await API.request('POST', 'http://localhost:3000/v1/login', data);
+      let response = await API.request("POST", "http://"+API.serverIP+":3000/v1/login", data);
       console.log("login response", JSON.stringify(response));
-      AsyncStorage.setItem('accessToken', response.access_token);
+      API.setToken('accessToken', response.access_token);
       Actions.users({
         id: response.user_id,
         email: response.email
@@ -48,9 +48,9 @@ class Login extends Component {
     }
 
     try {
-      let response = await API.request('POST', 'http://localhost:3000/v1/users', data);
+      let response = await API.request('POST', 'http://'+API.serverIP+':3000/v1/users', data);
       console.log("signup response", JSON.stringify(response));
-      AsyncStorage.setItem('accessToken', response.access_token);
+      API.setToken('accessToken', response.access_token);
       Actions.users({
         id: response.user_id,
         email: response.email

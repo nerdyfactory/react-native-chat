@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native';
+import {AsyncStorage, Platform} from 'react-native';
 
 exports.request = async (method, url, data, token) => {
   let response = await fetch(url, {
@@ -26,3 +26,9 @@ exports.getToken = async() => {
   }
   return accessToken;
 };
+
+exports.setToken = (key, value) => {
+  AsyncStorage.setItem(key, value);
+}
+
+exports.serverIP = Platform.OS == "android" ? '10.0.2.2' : 'localhost';

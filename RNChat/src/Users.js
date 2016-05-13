@@ -21,7 +21,7 @@ class Users extends Component {
     try {
       let accessToken = await API.getToken();
 
-      let response = await API.request('GET', 'http://localhost:3000/v1/users', null, accessToken); 
+      let response = await API.request('GET', 'http://'+API.serverIP+':3000/v1/users', null, accessToken); 
       console.log("get all users", JSON.stringify(response));
 
       this.setState({

@@ -16,14 +16,14 @@ var io = require('socket.io-client/socket.io');
 
 var STATUS_BAR_HEIGHT = Navigator.NavigationBar.Styles.General.StatusBarHeight;
 
-var SOCKET_SERVER_URL = 'http://localhost:4000';
-
 class ChatRoom extends Component {
   constructor(props) {
     super(props);
+
+    const socketServer = 'http://'+API.serverIP+':4000';
     
     const options = {transports: ['websocket'], forceNew: true};
-    this.socket = io(SOCKET_SERVER_URL, options);
+    this.socket = io(socketServer, options);
 
     this._messages = [];
     
@@ -75,7 +75,7 @@ class ChatRoom extends Component {
         recipient_id: this.props.recipientId
       }
 
-      let response = await API.request('POST', 'http://localhost:3000/v1/chat_rooms', data, accessToken);
+      let response = await API.request('POST', 'http://'+API.serverIP+':3000/v1/chat_rooms', data, accessToken);
       console.log("get chat room", JSON.stringify(response));
 
       let chatRoomId = response.chat_room_id;
@@ -93,7 +93,7 @@ class ChatRoom extends Component {
     try {
       let accessToken = await API.getToken();
 
-      let response = await API.request('GET', 'http://localhost:3000/v1/chat_rooms/'+this.state.chatRoomId, null, accessToken);
+      let response = await API.request('GET', 'http://'+API.serverIP+':3000/v1/chat_rooms/'+this.state.chatRoomId, null, accessToken);
       console.log("get chat messages", JSON.stringify(response));
 
       let chatMessages = response.chat_messages;
@@ -126,7 +126,7 @@ class ChatRoom extends Component {
         message: msg
       }
 
-      let response = await API.request('POST', 'http://localhost:3000/v1/chat_rooms/'+this.state.chatRoomId+'/chat_messages', data, accessToken);
+      let response = await API.request('POST', 'http://'+API.serverIP+':3000/v1/chat_rooms/'+this.state.chatRoomId+'/chat_messages', data, accessToken);
       console.log("save msg in server", JSON.stringify(response));
    } catch (error) {
       console.error("_saveMsgInServer error: ", error);
