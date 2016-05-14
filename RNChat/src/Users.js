@@ -1,4 +1,4 @@
-import React, {Component, View, Text, TextInput, StyleSheet, ListView, TouchableHighlight} from 'react-native';
+import React, {Component, View, Text, TextInput, StyleSheet, ListView, TouchableOpacity, Platform} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import API from './Api';
 
@@ -20,10 +20,8 @@ class Users extends Component {
   _getUsers = async() => {
     try {
       let accessToken = await API.getToken();
-
       let response = await API.request('GET', 'http://'+API.serverIP+':3000/v1/users', null, accessToken); 
       console.log("get all users", JSON.stringify(response));
-
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(response)
       });
@@ -45,27 +43,23 @@ class Users extends Component {
 
   renderUser(user) {
     return (
-      <TouchableHighlight onPress={() => this._openChatRoom(user)}  underlayColor='#dddddd'>
-        <View>
-          <View style={styles.container}>
-            <View style={styles.rightContainer}>
-              <Text style={styles.id}>{user.id}</Text>
-              <Text style={styles.email}>{user.email}</Text>
-            </View>
-          </View>
-          <View style={styles.separator} />
+      <TouchableOpacity onPress={() => this._openChatRoom(user)}  underlayColor='#dddddd'>
+        <View style={styles.rowStyle}>
+           <Text style={styles.rowText}>{user.email}</Text>
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
      );
   }
 
   render() {
     return (
-      <ListView
-        dataSource={this.state.dataSource}
-        renderRow={this.renderUser.bind(this)}
-        style={styles.listView}
-      />
+      <View style={styles.container}>
+        <ListView 
+          dataSource={this.state.dataSource}
+          renderRow={this.renderUser.bind(this)}
+          style={styles.listview}
+        />
+      </View>
     );
   }
 }
@@ -73,29 +67,20 @@ class Users extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-    //padding: 10,
+    marginTop: Platform.OS === 'ios' ? 64 : 44,
   },
-  rightContainer: {
-    flex: 1
+  rowStyle: {
+    paddingVertical: 20,
+    paddingLeft: 16,
+    borderTopColor: 'white',
+    borderLeftColor: 'white',
+    borderRightColor: 'white',
+    borderBottomColor: '#E0E0E0',
+    borderWidth: 1
   },
-  id: {
-    fontSize: 20,
-    marginBottom: 8
-  },
-  email: {
-    color: '#656565'
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#dddddd'
-  },
-  listView: {
-    backgroundColor: '#F5FCFF',
-    marginTop: 64
+  rowText: {
+    color: '#212121',
+    fontSize: 16
   },
 });
 

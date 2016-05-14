@@ -75,7 +75,10 @@ class Login extends Component {
               onChangeText={email => this.setState({email})}
               autoCapitalize="none"
               autoCorrect={false}
+              autoFocus={true}
               placeholder="Email"
+              returnKeyType = {"next"}
+              onSubmitEditing={() => this.refs.password.focus()}
             />
             <TextInput
               style={styles.input}

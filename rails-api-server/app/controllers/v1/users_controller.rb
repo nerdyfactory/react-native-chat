@@ -6,7 +6,7 @@ module V1
     # GET /v1/users
     # Get all the users
     def index
-      @users = User.where.not("id = ?", current_user.id).order(created_at: :desc)
+      @users = User.where.not("id = ?", current_user.id).order(:created_at)
       #@chat_rooms = ChatRoom.involving(current_user).order(created_at: :desc)
       render json: @users, each_serializer: UsersSerializer
     end

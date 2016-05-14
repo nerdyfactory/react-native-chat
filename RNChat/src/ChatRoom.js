@@ -1,4 +1,4 @@
-import React, {Linking, Platform, ActionSheetIOS, Dimensions, View, Text, Navigator, Component} from 'react-native';
+import React, {Platform, StyleSheet, Dimensions, View, Text, Navigator, Component} from 'react-native';
 import GiftedMessenger from 'react-native-gifted-messenger';
 import API from './Api';
 
@@ -205,34 +205,33 @@ class ChatRoom extends Component {
 
   render() {
     return (
-      <View style={{flex: 1, paddingTop: Navigator.NavigationBar.Styles.General.TotalNavHeight}}>
+      <View style={styles.container}>
         <GiftedMessenger
           ref={(c) => this._GiftedMessenger = c}
 
-          styles={{
-            bubbleRight: {
-              marginLeft: 70,
-              backgroundColor: '#007aff',
-            },
-          }}
-
           autoFocus={false}
-          messages={this.state.messages}
-          handleSend={this.handleSend.bind(this)}
+          blurOnSubmit={true}
+          submitOnReturn={true}
+          keyboardShouldPersistTaps={false}
           maxHeight={Dimensions.get('window').height - Navigator.NavigationBar.Styles.General.NavBarHeight - STATUS_BAR_HEIGHT}
 
+          messages={this.state.messages}
+          handleSend={this.handleSend.bind(this)}
+
           loadEarlierMessagesButton={!this.state.allLoaded}
-          onLoadEarlierMessages={this.onLoadEarlierMessages.bind(this)}
-
-          senderName='Awesome Developer'
-          senderImage={null}
-          displayNames={true}
-
           isLoadingEarlierMessages={this.state.isLoadingEarlierMessages}
+          onLoadEarlierMessages={this.onLoadEarlierMessages.bind(this)}
         />
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: Platform.OS === 'ios' ? 64 : 44,
+  }
+});
 
 module.exports = ChatRoom;
