@@ -14,6 +14,8 @@ gem 'rails-api'
 gem 'active_model_serializers'
 gem 'devise'
 gem 'pg'
+gem 'sidekiq'
+gem 'sinatra', :require => nil
 
 group :development, :test do
   gem 'byebug'

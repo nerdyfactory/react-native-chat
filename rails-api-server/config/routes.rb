@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   devise_for :user, only: []
 
@@ -8,4 +10,6 @@ Rails.application.routes.draw do
       resources :chat_messages
     end
   end
+
+  mount Sidekiq::Web => '/sidekiq'
 end

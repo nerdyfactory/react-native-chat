@@ -118,21 +118,6 @@ class ChatRoom extends Component {
     }
   }
 
-  _saveMsgInServer = async(msg) => {
-    try {
-      let accessToken = await API.getToken();
-
-      let data = {
-        message: msg
-      }
-
-      let response = await API.request('POST', 'http://'+API.serverIP+':3000/v1/chat_rooms/'+this.state.chatRoomId+'/chat_messages', data, accessToken);
-      console.log("save msg in server", JSON.stringify(response));
-   } catch (error) {
-      console.error("_saveMsgInServer error: ", error);
-   }
- } 
-
   setMessages(messages) {
     this._messages = messages;
     
@@ -148,12 +133,10 @@ class ChatRoom extends Component {
 
     this.socket.emit('new message', {
       message: message.text,
+      chatRoomId: this.state.chatRoomId,
       senderId: this.props.senderId,
       recipientId: this.props.recipientId
     });
-
-    // Send message.text to server
-    this._saveMsgInServer(message.text);
   }
 
   onLoadEarlierMessages() {
