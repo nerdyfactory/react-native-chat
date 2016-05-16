@@ -31,7 +31,8 @@ class ChatRoom extends Component {
       messages: this._messages,
       isLoadingEarlierMessages: false,
       allLoaded: false,
-      chatRoomId: null
+      chatRoomId: null,
+      page: 0
     };
   }
   
@@ -91,12 +92,27 @@ class ChatRoom extends Component {
 
   _getChatMessages = async() => {
     try {
+      // display a loader until you retrieve the messages from your server
+      this.setState({
+        isLoadingEarlierMessages: true,
+        page: this.state.page + 1
+      });
+
       let accessToken = await API.getToken();
 
-      let response = await API.request('GET', 'http://'+API.serverIP+':3000/v1/chat_rooms/'+this.state.chatRoomId, null, accessToken);
+      let response = await API.request('GET', 'http://'+API.serverIP+':3000/v1/chat_rooms/'+this.state.chatRoomId+'/chat_messages/page/'+this.state.page, null, accessToken);
       console.log("get chat messages", JSON.stringify(response));
 
-      let chatMessages = response.chat_messages;
+      if (response.length == 0) {
+        this.setState({
+          isLoadingEarlierMessages: false, // hide the loader
+          allLoaded: true, // hide the `Load earlier messages` button
+        });
+        return;
+      }
+
+      //let chatMessages = response;
+      let chatMessages = response.reverse();
       console.log('chat messages', chatMessages);
 
       let earlierMessages = [];
@@ -112,7 +128,13 @@ class ChatRoom extends Component {
         });
       }
 
-      this.setMessages(earlierMessages.concat(this._messages));
+      setTimeout(() => {
+        this.setState({
+          isLoadingEarlierMessages: false,
+        });
+        this.setMessages(earlierMessages.concat(this._messages));
+      }, 500);
+
     } catch(error) {
       console.error("_getChatMessages error: ", error);
     }
@@ -139,47 +161,6 @@ class ChatRoom extends Component {
     });
   }
 
-  onLoadEarlierMessages() {
-
-    // display a loader until you retrieve the messages from your server
-    this.setState({
-      isLoadingEarlierMessages: true,
-    });
-    
-    // Your logic here
-    // Eg: Retrieve old messages from your server
-
-    // IMPORTANT
-    // Oldest messages have to be at the begining of the array
-    
-    var earlierMessages = [
-      {
-        text: 'JavaScript and React. https://github.com/facebook/react-native', 
-        name: 'React-Bot', 
-        image: {uri: 'https://facebook.github.io/react/img/logo_og.png'}, 
-        position: 'left', 
-        date: new Date(2016, 0, 1, 20, 0),
-        uniqueId: Math.round(Math.random() * 10000), // simulating server-side unique id generation
-      }, {
-        text: 'This is a touchable phone number 0606060606 parsed by taskrabbit/react-native-parsed-text', 
-        name: 'Awesome Developer', 
-        image: null, 
-        position: 'right', 
-        date: new Date(2016, 0, 2, 12, 0),
-        uniqueId: Math.round(Math.random() * 10000), // simulating server-side unique id generation
-      },
-    ];
-
-    setTimeout(() => {
-      this.setMessages(earlierMessages.concat(this._messages)); // prepend the earlier messages to your list
-      this.setState({
-        isLoadingEarlierMessages: false, // hide the loader
-        allLoaded: true, // hide the `Load earlier messages` button
-      });
-    }, 1000); // simulating network
-    
-  }
-
   handleReceive(message = {}) {
     // make sure that your message contains :
     // text, name, image, position: 'left', date, uniqueId
@@ -203,7 +184,7 @@ class ChatRoom extends Component {
 
           loadEarlierMessagesButton={!this.state.allLoaded}
           isLoadingEarlierMessages={this.state.isLoadingEarlierMessages}
-          onLoadEarlierMessages={this.onLoadEarlierMessages.bind(this)}
+          onLoadEarlierMessages={this._getChatMessages.bind(this)}
         />
       </View>
     );

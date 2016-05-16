@@ -16,6 +16,7 @@ gem 'devise'
 gem 'pg'
 gem 'sidekiq'
 gem 'sinatra', :require => nil
+gem 'kaminari'
 
 group :development, :test do
   gem 'byebug'

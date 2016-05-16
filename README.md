@@ -74,18 +74,21 @@ curl -X GET -H "Content-type: application/json" -H "Authorization: xfB32Lgoi_7A7
 
 ####Create a chat room
 ```bash
+#if chat room already exists then return the chat room info
 curl -X POST -H "Content-type: application/json" -H "Authorization: xfB32Lgoi_7A7CEkcMYh" http://localhost:3000/v1/chat_rooms -d '{"sender_id": 1, "recipient_id": 2}'
->> {"chat_room_id":1,"sender_id":1,"recipient_id":2,"chat_messages":[]}
-
-curl -X POST -H "Content-type: application/json" -H "Authorization: xfB32Lgoi_7A7CEkcMYh" http://localhost:3000/v1/chat_rooms -d '{"sender_id": 1, "recipient_id": 2}'
->> {"chat_room_id":1,"sender_id":1,"recipient_id":2,"chat_messages":[{"id":1,"message":"whats up","chat_room_id":1,"user_id":1,"created_at":"2016-05-11T13:22:09.820Z"}]}
+>> {"chat_room_id":1,"sender_id":1,"recipient_id":2}
 ```
 
-####Show a chat room
+####Show messages in a chat room
 ```bash
-curl -X GET -H "Content-type: application/json" -H "Authorization: xfB32Lgoi_7A7CEkcMYh" http://localhost:3000/v1/chat_rooms/1
+# paginated
+curl -X GET -H "Content-type: application/json" -H "Authorization: xfB32Lgoi_7A7CEkcMYh" http://localhost:3000/v1/chat_rooms/1/chat_messages/page/1
 
->> {"chat_room_id":1,"sender_id":1,"recipient_id":2,"chat_messages":[{"id":1,"message":"whats up","chat_room_id":1,"user_id":1,"created_at":"2016-05-11T13:22:09.820Z"}]}
+>> [{"chat_message_id":50,"user_id":2,"created_at":"2016-05-16T11:14:22.130Z","message":"werwerwre"},{"chat_message_id":49,"user_id":1,"created_at":"2016-05-16T11:14:17.865Z","message":"Asdfas"},{"chat_message_id":48,"user_id":2,"created_at":"2016-05-16T08:55:40.489Z","message":"rssdsds"},{"chat_message_id":47,"user_id":2,"created_at":"2016-05-16T08:41:27.880Z","message":"what up?"},{"chat_message_id":46,"user_id":1,"created_at":"2016-05-16T08:39:15.508Z","message":"Yo man"}]
+
+curl -X GET -H "Content-type: application/json" -H "Authorization: xfB32Lgoi_7A7CEkcMYh" http://localhost:3000/v1/chat_rooms/1/chat_messages/page/2
+
+>> [{"chat_message_id":45,"user_id":1,"created_at":"2016-05-14T09:24:15.817Z","message":"Jhjhh"},{"chat_message_id":44,"user_id":2,"created_at":"2016-05-14T09:18:20.898Z","message":"sdfsdfsdf"},{"chat_message_id":43,"user_id":1,"created_at":"2016-05-14T09:18:09.200Z","message":"Asdfasdf"},{"chat_message_id":42,"user_id":2,"created_at":"2016-05-14T09:17:42.405Z","message":"sdfsdf"},{"chat_message_id":41,"user_id":1,"created_at":"2016-05-14T09:17:10.838Z","message":"asdfasd"}]
 ```
 
 ####Create a chat message

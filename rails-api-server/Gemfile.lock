@@ -62,6 +62,9 @@ GEM
       activesupport (>= 4.1.0)
     i18n (0.7.0)
     json (1.8.3)
+    kaminari (0.16.3)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
@@ -153,6 +156,7 @@ DEPENDENCIES
   byebug
   devise
   faker
+  kaminari
   pg
   rails (= 4.2.6)
   rails-api
