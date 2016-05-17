@@ -94,20 +94,19 @@ curl -X GET -H "Content-type: application/json" -H "Authorization: xfB32Lgoi_7A7
 curl -X GET -H "Content-type: application/json" -H "Authorization: xfB32Lgoi_7A7CEkcMYh" http://localhost:3000/v1/chat_rooms/1/chat_messages/page/2
 
 >> [{"chat_message_id":45,"user_id":1,"created_at":"2016-05-14T09:24:15.817Z","message":"Jhjhh"},{"chat_message_id":44,"user_id":2,"created_at":"2016-05-14T09:18:20.898Z","message":"sdfsdfsdf"},{"chat_message_id":43,"user_id":1,"created_at":"2016-05-14T09:18:09.200Z","message":"Asdfasdf"},{"chat_message_id":42,"user_id":2,"created_at":"2016-05-14T09:17:42.405Z","message":"sdfsdf"},{"chat_message_id":41,"user_id":1,"created_at":"2016-05-14T09:17:10.838Z","message":"asdfasd"}]
-
-NOTE: When new messages are added using socket.io client, the pagination index will be altered in database. Therefore, make sure that chat messages retrieved through this API does not already exist in socket.io client's chat messages (i.e. filter out duplicate messages).
 ```
+NOTE: When new messages are added using socket.io client, the pagination index will be altered in database. Therefore, make sure that chat messages retrieved through this API does not already exist in socket.io client's chat messages (i.e. filter out duplicate messages).
 
 ##socket.io APIs
 
 ####Add user to chat room
-```
+```javascript
 // add user with id 1
 socket.emit('add user', 1);
 ```
 
 ####Send message
-```
+```javascript
 // user 1 sending message to user 2
 // use 'Create chat room' Rails API to get chat-room-id, sender-id and recipient-id
 socket.emit('new message', {
@@ -119,7 +118,7 @@ socket.emit('new message', {
 ```
 
 ####Receive message
-```
+```javascript
 socket.on('new message', function (data) {
   // show data in your app
 });
