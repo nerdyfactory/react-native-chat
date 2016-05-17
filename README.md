@@ -8,6 +8,8 @@ A demo chat app built with
 - socket.io (low-latency bi-directional communication)
 - PostgreSQL (save user and chat info)
 
+![Alt Text](https://raw.githubusercontent.com/nerdyfactory/react-native-chat/master/RNChat/screenshot.gif)
+
 ##Postgres setup
 ```
 postgres -D /usr/local/var/postgres
