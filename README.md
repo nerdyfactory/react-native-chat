@@ -3,7 +3,8 @@ A demo chat app built with
 - React-Native (iOS and Android)
 - Rails (API server)
 - socket.io (low-latency bi-directional communication)
-- PostgreSQL
+- PostgreSQL (save user and chat info)
+- sidekiq and redis (background processing of chat messages)
 
 ##Postgres setup
 ```
@@ -26,6 +27,11 @@ rails s
 cd socket-io-server
 npm install
 node index
+```
+##redis and sidekiq
+```
+redis-server --unixsocket /tmp/redis.sock
+bundle exec sidekiq
 ```
 ##React-Native setup
 ```
@@ -74,8 +80,9 @@ curl -X GET -H "Content-type: application/json" -H "Authorization: xfB32Lgoi_7A7
 
 ####Create a chat room
 ```bash
-#if chat room already exists then return the chat room info
+#if chat room already exists then just return the chat room info
 curl -X POST -H "Content-type: application/json" -H "Authorization: xfB32Lgoi_7A7CEkcMYh" http://localhost:3000/v1/chat_rooms -d '{"sender_id": 1, "recipient_id": 2}'
+
 >> {"chat_room_id":1,"sender_id":1,"recipient_id":2}
 ```
 
