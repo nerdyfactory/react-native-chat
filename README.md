@@ -2,9 +2,11 @@
 A demo chat app built with
 - React-Native (iOS and Android)
 - Rails (API server)
+  - devise (user authentication)
+  - sidekiq and redis (background processing of chat messages)
+  - kaminari (pagination)
 - socket.io (low-latency bi-directional communication)
 - PostgreSQL (save user and chat info)
-- sidekiq and redis (background processing of chat messages)
 
 ##Postgres setup
 ```
@@ -22,16 +24,17 @@ rake db:migrate
 rake db:seed
 rails s
 ```
+##redis and sidekiq
+```
+cd rails-api-server
+redis-server --unixsocket /tmp/redis.sock
+bundle exec sidekiq
+```
 ##socket.io setup
 ```
 cd socket-io-server
 npm install
 node index
-```
-##redis and sidekiq
-```
-redis-server --unixsocket /tmp/redis.sock
-bundle exec sidekiq
 ```
 ##React-Native setup
 ```
@@ -43,7 +46,7 @@ OR
 react-native run-ios
 ```
 
-##APIs
+##Rails APIs
 
 ####SignUp user
 ```bash
@@ -57,11 +60,6 @@ curl -X POST -H "Content-Type: application/json" http://localhost:3000/v1/users 
 curl -X POST -H "Content-Type: application/json" http://localhost:3000/v1/login -d '{"email": "user1@example.com", "password": "password"}'
 
 >> {"email":"user1@example.com","user_id":1,"access_token":"xfB32Lgoi_7A7CEkcMYh"}
-```
-
-####SignOut user
-```bash
-TBD
 ```
 
 ####Show all users (except requesting user)
@@ -96,11 +94,33 @@ curl -X GET -H "Content-type: application/json" -H "Authorization: xfB32Lgoi_7A7
 curl -X GET -H "Content-type: application/json" -H "Authorization: xfB32Lgoi_7A7CEkcMYh" http://localhost:3000/v1/chat_rooms/1/chat_messages/page/2
 
 >> [{"chat_message_id":45,"user_id":1,"created_at":"2016-05-14T09:24:15.817Z","message":"Jhjhh"},{"chat_message_id":44,"user_id":2,"created_at":"2016-05-14T09:18:20.898Z","message":"sdfsdfsdf"},{"chat_message_id":43,"user_id":1,"created_at":"2016-05-14T09:18:09.200Z","message":"Asdfasdf"},{"chat_message_id":42,"user_id":2,"created_at":"2016-05-14T09:17:42.405Z","message":"sdfsdf"},{"chat_message_id":41,"user_id":1,"created_at":"2016-05-14T09:17:10.838Z","message":"asdfasd"}]
+
+NOTE: When new messages are added using socket.io client, the pagination index will be altered in database. Therefore, make sure that chat messages retrieved through this API does not already exist in socket.io client's chat messages (i.e. filter out duplicate messages).
 ```
 
-####Create a chat message
-```bash
-curl -X POST -H "Content-type: application/json" -H "Authorization: xfB32Lgoi_7A7CEkcMYh" http://localhost:3000/v1/chat_rooms/1/chat_messages -d '{"message": "whats up"}'
+##socket.io APIs
 
->> {"chat_message_id":1,"user_id":1,"created_at":"2016-05-11T13:22:09.820Z","message":"whats up","chat_room_id":1}
+####Add user to chat room
+```
+// add user with id 1
+socket.emit('add user', 1);
+```
+
+####Send message
+```
+// user 1 sending message to user 2
+// use 'Create chat room' Rails API to get chat-room-id, sender-id and recipient-id
+socket.emit('new message', {
+  message: 'hi',
+  chatRoomId: 1,
+  senderId: 1,
+  recipientId: 2
+});
+```
+
+####Receive message
+```
+socket.on('new message', function (data) {
+  // show data in your app
+});
 ```

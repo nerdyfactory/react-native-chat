@@ -118,6 +118,9 @@ class ChatRoom extends Component {
       let earlierMessages = [];
 
       for (let msg of chatMessages) {
+        if (this._messages.find( m => m.uniqueId === msg.chat_message_id )) {
+          continue;
+        }
         earlierMessages.push({
           text: msg.message,
           name: (msg.user_id == this.props.senderId) ? this.props.senderEmail : this.props.recipientEmail,
